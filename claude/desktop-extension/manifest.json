@@ -1,8 +1,8 @@
 {
   "manifest_version": "0.3",
-  "name": "lovestory-desktop",
-  "display_name": "lovestory",
-  "version": "0.3.0-beta.1",
+  "name": "claude-codex-live-bridge-desktop",
+  "display_name": "Claude Codex Live Bridge",
+  "version": "0.3.0-beta.2",
   "description": "Connect Claude to existing Codex chats with optional reply-only hook alerts; activity reports require explicit user requests.",
   "author": {
     "name": "skumar260394-Notabot"

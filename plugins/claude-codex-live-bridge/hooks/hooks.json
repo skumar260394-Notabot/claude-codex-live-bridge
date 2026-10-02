@@ -1,5 +1,5 @@
 {
-  "description": "lovestory: record Codex activity and inject peer messages as context through the existing MCP connection. Never blocks or denies a tool call.",
+  "description": "claude-codex-live-bridge: record Codex activity and inject peer messages as context through the existing MCP connection. Never blocks or denies a tool call.",
   "hooks": {
     "SessionStart": [
       {
@@ -14,7 +14,7 @@
               "cwd": "${cwd}"
             },
             "timeout": 15,
-            "statusMessage": "lovestory"
+            "statusMessage": "claude-codex-live-bridge"
           }
         ]
       }
@@ -32,7 +32,7 @@
               "cwd": "${cwd}"
             },
             "timeout": 15,
-            "statusMessage": "lovestory"
+            "statusMessage": "claude-codex-live-bridge"
           }
         ]
       }
@@ -54,7 +54,7 @@
               "tool_use_id": "${tool_use_id}"
             },
             "timeout": 15,
-            "statusMessage": "lovestory"
+            "statusMessage": "claude-codex-live-bridge"
           }
         ]
       }
@@ -76,7 +76,7 @@
               "tool_use_id": "${tool_use_id}"
             },
             "timeout": 15,
-            "statusMessage": "lovestory"
+            "statusMessage": "claude-codex-live-bridge"
           }
         ]
       }
@@ -95,7 +95,7 @@
               "last_assistant_message": "${last_assistant_message}"
             },
             "timeout": 15,
-            "statusMessage": "lovestory"
+            "statusMessage": "claude-codex-live-bridge"
           }
         ]
       }

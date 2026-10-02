@@ -16,6 +16,6 @@ Desktop routing selects an existing `thread:<id>` from `codex_sessions`; the sel
 
 Reply-only hooks peek at up to four messages in explicitly bound calls, following linked segments. They do not drain the inbox. A lost callback result can therefore be retried. Acknowledge each `message_id` to stop repetition. The setup probe binds the native session, separate from declared activity metadata. Empty output has no model reminder text.
 
-The local store retains its historical `.codex-claude-live` directory and the Codex-side MCP key `claude-live-bridge`. These technical names allow existing protocol consumers to interoperate; the public plugin is lovestory. Avoid simultaneously enabling private and public hook installations.
+The local store retains its historical `.codex-claude-live` directory and the Codex-side MCP key `claude-live-bridge`. These technical names allow existing protocol consumers to interoperate; the public plugin is claude-codex-live-bridge. Avoid simultaneously enabling private and public hook installations.
 
 See [supported features](SUPPORT.md), [installation](INSTALL.md), and [privacy](../PRIVACY.md). This preview has no cross-machine relay or idle Desktop wake.

@@ -1,17 +1,21 @@
-# lovestory 0.3.0-beta.1
+# Claude Codex Live Bridge 0.3.0-beta.2
 
-First public Windows preview of the local Claude ↔ Codex collaboration bridge, MIT licensed.
+Renamed public Windows preview of the local Claude ↔ Codex collaboration bridge, MIT licensed.
 
 ## Downloads
 
-- `lovestory-desktop-0.3.0-beta.1.mcpb`: install in Claude Desktop's Extensions settings.
-- `lovestory-codex-0.3.0-beta.1.zip`: Codex plugin source package; repository marketplace installation is recommended.
-- `lovestory-alerts-0.3.0-beta.1.zip`: optional experimental Claude reply-only companion.
+- `claude-codex-live-bridge-desktop-0.3.0-beta.2.mcpb`: install in Claude Desktop's Extensions settings.
+- `claude-codex-live-bridge-codex-0.3.0-beta.2.zip`: Codex plugin source package; repository marketplace installation is recommended.
+- `claude-codex-live-bridge-alerts-0.3.0-beta.2.zip`: optional experimental Claude reply-only companion.
 - `SHA256SUMS.txt`: checksums for all three packages.
 
-Read [installation](https://github.com/skumar260394-Notabot/lovestory/blob/main/docs/INSTALL.md), [supported features](https://github.com/skumar260394-Notabot/lovestory/blob/main/docs/SUPPORT.md), and [privacy](https://github.com/skumar260394-Notabot/lovestory/blob/main/PRIVACY.md).
+Read [installation](https://github.com/skumar260394-Notabot/claude-codex-live-bridge/blob/main/docs/INSTALL.md), [supported features](https://github.com/skumar260394-Notabot/claude-codex-live-bridge/blob/main/docs/SUPPORT.md), and [privacy](https://github.com/skumar260394-Notabot/claude-codex-live-bridge/blob/main/PRIVACY.md).
 
-Existing private bridge users: public plugin identities are new. Disable/disconnect the previous versions before enabling lovestory; installing this preview does not replace them automatically.
+Existing private bridge users: public plugin identities are new. Disable/disconnect the previous versions before enabling claude-codex-live-bridge; installing this preview does not replace them automatically.
+
+## Rename
+
+This release supersedes the lovestory-branded beta.1. Remove/disable those packages before enabling the renamed plugin, Desktop extension and companion. The repository was renamed; GitHub redirects the original links.
 
 ## Verification
 

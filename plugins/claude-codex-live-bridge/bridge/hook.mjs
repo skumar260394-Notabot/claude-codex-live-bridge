@@ -75,5 +75,5 @@ try {
   }
 } catch (error) {
   // A bridge failure must not block Claude's work.
-  process.stderr.write(`lovestory hook: ${error.message}\n`);
+  process.stderr.write(`claude-codex-live-bridge hook: ${error.message}\n`);
 }

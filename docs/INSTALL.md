@@ -9,22 +9,22 @@ Windows, Node.js 18+ on PATH, an installed local Codex client, and Claude Deskto
 Add the repository marketplace:
 
 ```sh
-codex plugin marketplace add skumar260394-Notabot/lovestory --ref v0.3.0-beta.1
+codex plugin marketplace add skumar260394-Notabot/claude-codex-live-bridge --ref v0.3.0-beta.2
 ```
 
-Install **lovestory** from that local source in the desktop Plugins Directory. Alternatively, clone the repository and add its local directory as a marketplace. Review and trust hooks using your client's hook controls (`/hooks` where available); restart/reload the session if required. No hook is proven active until a real event is observed.
+Install **Claude Codex Live Bridge** from that local source in the desktop Plugins Directory. Alternatively, clone the repository and add its local directory as a marketplace. Review and trust hooks using your client's hook controls (`/hooks` where available); restart/reload the session if required. No hook is proven active until a real event is observed.
 
-The internal MCP server key is `claude-live-bridge`, retained for protocol compatibility. The public plugin/display name is lovestory. Do not install a duplicate server to fix a naming error.
+The internal MCP server key is `claude-live-bridge`, retained for protocol compatibility. The public plugin/display name is claude-codex-live-bridge. Do not install a duplicate server to fix a naming error.
 
 ## Claude Desktop
 
-Download `lovestory-desktop-0.3.0-beta.1.mcpb`. Use Settings → Extensions → Advanced settings → Install Extension. Select the MCPB; do not attach it to a conversation as a document. Enable lovestory in the conversation's connector menu. Restart Claude if the app requests it or fails to load the server.
+Download `claude-codex-live-bridge-desktop-0.3.0-beta.2.mcpb`. Use Settings → Extensions → Advanced settings → Install Extension. Select the MCPB; do not attach it to a conversation as a document. Enable claude-codex-live-bridge in the conversation's connector menu. Restart Claude if the app requests it or fails to load the server.
 
 Ask Claude to list Codex chats with `codex_sessions`, choose the exact intended `thread:<id>`, and open a greeting-only `call_codex`. An optional absolute `project_path` verifies or filters the destination. No folder is guessed from a chat title. Read replies using `read_codex_messages` and the returned call ID.
 
 ### Optional experimental raised hands
 
-Upload `lovestory-alerts-0.3.0-beta.1.zip` through Claude's plugin installation interface, then enable it. The host must support a direct `mcp_tool` hook into the already configured Desktop connector. The shipped server name `lovestory` must match the host's actual configured connector name. This transport is documented for Claude Code; Desktop/task-host support is unverified.
+Upload `claude-codex-live-bridge-alerts-0.3.0-beta.2.zip` through Claude's plugin installation interface, then enable it. The host must support a direct `mcp_tool` hook into the already configured Desktop connector. The shipped server name `Claude Codex Live Bridge` must match the host's actual configured connector name. This transport is documented for Claude Code; Desktop/task-host support is unverified.
 
 In the exact existing Claude chat, use `prepare_reply_notifications` for an explicitly selected open call. If a legacy activity subscription owns that call, supply its same `activity_session_id`. Run the returned harmless `probe_command` as an ordinary command in that chat, then inspect `reply_notification_status`. Do **not** call `reply_hook` from the model or fabricate a hook receipt. Renew an expired unbound probe with `retry_probe: true`.
 
@@ -46,13 +46,13 @@ Use `list_sessions` to choose the exact existing Claude session endpoint. A sess
 
 ## Updating from private versions
 
-The public identities are new, so installing lovestory does not replace the privately created Claude Live Bridge or Codex Live Bridge extension. Close old calls, disconnect old project hooks using that version's tools, and disable/remove the old extension and companion through their clients. Then install lovestory. Never run both sets of hooks on the same project. Local history remains under the legacy `.codex-claude-live` directory; clear it yourself if you want a fresh start.
+The public identities are new, so installing claude-codex-live-bridge does not replace the privately created Claude Live Bridge or Codex Live Bridge extension. Close old calls, disconnect old project hooks using that version's tools, and disable/remove the old extension and companion through their clients. Then install claude-codex-live-bridge. Never run both sets of hooks on the same project. Local history remains under the legacy `.codex-claude-live` directory; clear it yourself if you want a fresh start.
 
-For future lovestory releases, replace the MCPB and companion with matching assets, refresh the Codex marketplace, and reload clients as needed. A pinned Git ref must be updated deliberately.
+For future claude-codex-live-bridge releases, replace the MCPB and companion with matching assets, refresh the Codex marketplace, and reload clients as needed. A pinned Git ref must be updated deliberately.
 
 ## Removal
 
-Disconnect project hooks/channel with `disconnect_project`, `disconnect_codex_project` and `disconnect_claude_channel` where applicable. These remove only bridge-managed entries. Disable selected reply bindings with `disable_reply_notifications`. Remove the Desktop extension and companion using Claude settings, and lovestory using Codex plugin controls. Remove the marketplace with `codex plugin marketplace remove lovestory` if desired. History is retained; see [Privacy](../PRIVACY.md) for deleting it.
+Disconnect project hooks/channel with `disconnect_project`, `disconnect_codex_project` and `disconnect_claude_channel` where applicable. These remove only bridge-managed entries. Disable selected reply bindings with `disable_reply_notifications`. Remove the Desktop extension and companion using Claude settings, and claude-codex-live-bridge using Codex plugin controls. Remove the marketplace with `codex plugin marketplace remove claude-codex-live-bridge` if desired. History is retained; see [Privacy](../PRIVACY.md) for deleting it.
 
 ## Primary references
 

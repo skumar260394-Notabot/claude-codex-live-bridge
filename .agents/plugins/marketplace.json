@@ -1,11 +1,19 @@
 {
-  "name": "lovestory",
-  "interface": { "displayName": "lovestory" },
+  "name": "claude-codex-live-bridge",
+  "interface": {
+    "displayName": "Claude Codex Live Bridge"
+  },
   "plugins": [
     {
-      "name": "lovestory",
-      "source": { "source": "local", "path": "./plugins/lovestory" },
-      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "name": "claude-codex-live-bridge",
+      "source": {
+        "source": "local",
+        "path": "./plugins/claude-codex-live-bridge"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
       "category": "Productivity"
     }
   ]

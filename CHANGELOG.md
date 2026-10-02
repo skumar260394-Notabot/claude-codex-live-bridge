@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0-beta.2 — 2026-10-02
+
+Renamed the public project to **Claude Codex Live Bridge** at the owner's request. Repository and current installation links use `claude-codex-live-bridge`. Matching Codex, Desktop and alert companion packages have the new identity. Protocol storage and the internal Codex MCP key are preserved.
+
+If beta.1 was installed, disable/remove its lovestory packages before enabling the renamed packages. Historical beta.1 remains available; install beta.2 for the current name.
+
 ## 0.3.0-beta.1 — 2026-10-02
 
 First public preview under the **lovestory** name, derived from private Codex bridge 0.2.9 and Desktop/companion 0.2.8.

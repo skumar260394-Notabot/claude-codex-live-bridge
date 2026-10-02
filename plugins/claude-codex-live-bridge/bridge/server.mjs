@@ -219,7 +219,7 @@ function codexHookInput(event, root = null) {
 }
 function codexMcpHook(event, root) {
   return { type: 'mcp_tool', server: 'claude-live-bridge', tool: 'codex_hook_event',
-    input: codexHookInput(event, root), timeout: 15, statusMessage: 'lovestory' };
+    input: codexHookInput(event, root), timeout: 15, statusMessage: 'claude-codex-live-bridge' };
 }
 function isOurCodexHook(handler, root) {
   return handler?.type === 'mcp_tool' && handler.server === 'claude-live-bridge' &&
@@ -518,7 +518,7 @@ function watchCodexSession(args) {
 const tools = [
   ...desktopActivityReadTools,
   { name: 'connect_project', description: 'Install non-blocking Claude Code hooks in local project settings, preserving existing settings.', inputSchema: { type: 'object', properties: { project_path: { type: 'string' } }, required: ['project_path'] } },
-  { name: 'disconnect_project', description: 'Remove only lovestory hooks from local project settings.', inputSchema: { type: 'object', properties: { project_path: { type: 'string' } }, required: ['project_path'] } },
+  { name: 'disconnect_project', description: 'Remove only claude-codex-live-bridge hooks from local project settings.', inputSchema: { type: 'object', properties: { project_path: { type: 'string' } }, required: ['project_path'] } },
   { name: 'list_sessions', description: 'List existing Claude Code sessions for this project with a prompt-based name when available, endpoint, and delivery path.', inputSchema: { type: 'object', properties: { project_path: { type: 'string' } }, required: ['project_path'] } },
   { name: 'watch_activity', description: 'Read new Claude Code activity after a cursor, optionally waiting up to 20 seconds.', inputSchema: { type: 'object', properties: { project_path: { type: 'string' }, session_id: { type: 'string' }, after_cursor: { type: 'integer' }, wait_ms: { type: 'integer' } }, required: ['project_path', 'session_id'] } },
   { name: 'raise_hand', description: 'Queue a non-blocking concern for Claude to receive at the next hook event.', inputSchema: { type: 'object', properties: { project_path: { type: 'string' }, session_id: { type: 'string' }, message: { type: 'string' } }, required: ['project_path', 'session_id', 'message'] } },
@@ -533,7 +533,7 @@ const tools = [
       turn_id: { type: 'string' }, tool_name: { type: 'string' }, tool_input: {}, tool_use_id: { type: 'string' },
       last_assistant_message: { type: ['string', 'null'] }
     }, required: ['hook_event_name', 'session_id', 'cwd'] } },
-  { name: 'disconnect_codex_project', description: 'Remove only lovestory hooks from the Codex hooks config.', inputSchema: { type: 'object', properties: { project_path: { type: 'string' } }, required: ['project_path'] } },
+  { name: 'disconnect_codex_project', description: 'Remove only claude-codex-live-bridge hooks from the Codex hooks config.', inputSchema: { type: 'object', properties: { project_path: { type: 'string' } }, required: ['project_path'] } },
   { name: 'bridge_status', description: 'Show both directions of the bridge and which delivery paths actually work right now.', inputSchema: { type: 'object', properties: { project_path: { type: 'string' } }, required: ['project_path'] } },
   { name: 'call_claude', description: 'Open a two-way call with a selected existing Claude Code session or live channel. Use list_sessions first; named sessions receive at their next hook event.', inputSchema: { type: 'object', properties: {
       project_path: { type: 'string' }, subject: { type: 'string' }, message: { type: 'string' },
@@ -568,7 +568,7 @@ for await (const line of lines) {
   if (request.id === undefined) continue;
   try {
     let result;
-    if (request.method === 'initialize') result = { protocolVersion: request.params?.protocolVersion ?? '2025-06-18', capabilities: { tools: {} }, serverInfo: { name: 'claude-live-bridge', version: '0.3.0-beta.1' } };
+    if (request.method === 'initialize') result = { protocolVersion: request.params?.protocolVersion ?? '2025-06-18', capabilities: { tools: {} }, serverInfo: { name: 'claude-live-bridge', version: '0.3.0-beta.2' } };
     else if (request.method === 'ping') result = {};
     else if (request.method === 'tools/list') result = { tools };
     else if (request.method === 'tools/call') {

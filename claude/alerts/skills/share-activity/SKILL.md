@@ -7,7 +7,7 @@ description: Configure reply-only Codex raised hands for this existing Claude ch
 
 This skill name is retained for update compatibility. The companion no longer
 asks Claude to publish reports or poll after each tool. Use desktop extension
-lovestory 0.3.0-beta.1 or later.
+claude-codex-live-bridge 0.3.0-beta.2 or later.
 
 1. Retain this conversation and its explicitly selected open bridge call. Do
    not guess another chat, call, activity ID, or newest session.
@@ -38,6 +38,6 @@ lovestory 0.3.0-beta.1 or later.
    from reply_notification_status. No Stop hook, idle wake or permissions.
 
 The server name in hooks/hooks.json must match an already configured connector
-in the host. The shipped value is lovestory. If the host uses another
+in the host. The shipped value is Claude Codex Live Bridge. If the host uses another
 name or ignores mcp_tool hooks, report the actual limitation instead of claiming
 push delivery. Do not add a duplicate MCP server merely to match a label.

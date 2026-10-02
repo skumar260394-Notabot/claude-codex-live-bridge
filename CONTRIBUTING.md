@@ -2,7 +2,7 @@
 
 Use Node.js 18+ and Python 3.9+. There are no npm runtime dependencies.
 
-- `plugins/lovestory/`: Codex manifests, skill, hooks and canonical shared runtime.
+- `plugins/claude-codex-live-bridge/`: Codex manifests, skill, hooks and canonical shared runtime.
 - `claude/desktop-extension/`: Desktop-specific MCP server and package manifest. Four shared module files are development re-exports; the builder replaces them with canonical sources inside the MCPB.
 - `claude/alerts/`: experimental reply-only companion.
 - `tests/`: additional notification tests, using an isolated temporary home.

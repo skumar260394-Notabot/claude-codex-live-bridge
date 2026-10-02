@@ -36,7 +36,7 @@ const m = sendTurn(root,a.call_id,'codex','hello selected chat');
 sendTurn(root,b.call_id,'codex','another chat private');
 check(JSON.stringify(replyHook({...event,session_id:'native-B'})) === '{}', 'other session cannot drain');
 for (const ev of ['Stop','SessionEnd','PreToolUse','PermissionRequest']) check(JSON.stringify(replyHook({...event,hook_event_name:ev})) === '{}', 'unsupported event silent');
-for (const tool of ['reply_hook','mcp__codex_live_bridge__ack_call','Codex Live Bridge: Report activity','lovestory: Report activity','lovestory']) check(JSON.stringify(replyHook({...event,tool_name:tool})) === '{}', 'own tools silent');
+for (const tool of ['reply_hook','mcp__codex_live_bridge__ack_call','Codex Live Bridge: Report activity','claude-codex-live-bridge: Report activity','claude-codex-live-bridge']) check(JSON.stringify(replyHook({...event,tool_name:tool})) === '{}', 'own tools silent');
 check(JSON.stringify(replyHook({...event,tool_name:'MCP',tool_input:JSON.stringify({server:'Codex Live Bridge',tool:'read_codex_messages'})})) === '{}','wrapped tools silent');
 const output = replyHook({...event,tool_input:{command:'secret_input_never_forwarded'},tool_response:'secret_output_never_forwarded'});
 const context = output.hookSpecificOutput.additionalContext;

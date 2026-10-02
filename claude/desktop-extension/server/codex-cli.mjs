@@ -1,2 +1,2 @@
 // Shared source; the package builder embeds the canonical module.
-export * from '../../../plugins/lovestory/bridge/codex-cli.mjs';
+export * from '../../../plugins/claude-codex-live-bridge/bridge/codex-cli.mjs';

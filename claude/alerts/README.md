@@ -1,8 +1,8 @@
-# lovestory Alerts 0.3.0-beta.1
+# Claude Codex Live Bridge Alerts 0.3.0-beta.2
 
-Public companion identity: lovestory-alerts. Activity and
+Public companion identity: claude-codex-live-bridge-alerts. Activity and
 per-step polling reminders are removed. Install the companion ZIP through
-Customize > Plugins, and the matching lovestory 0.3.0-beta.1 MCPB through
+Customize > Plugins, and the matching claude-codex-live-bridge 0.3.0-beta.2 MCPB through
 Settings > Extensions > Advanced settings > Install Extension.
 
 ## Delivery

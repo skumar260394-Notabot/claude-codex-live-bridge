@@ -5,7 +5,7 @@ import json
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-PLUGIN = ROOT / 'plugins/lovestory'
+PLUGIN = ROOT / 'plugins/claude-codex-live-bridge'
 VERSION = json.loads((PLUGIN / 'plugin.json').read_text(encoding='utf-8'))['version']
 SHARED = ('common.mjs', 'protocol.mjs', 'desktop-activity.mjs', 'codex-cli.mjs')
 
@@ -42,9 +42,9 @@ def build():
     alerts = sources(ROOT / 'claude/alerts')
     alerts['LICENSE'] = (ROOT / 'LICENSE').read_bytes()
     packages = {
-        f'lovestory-codex-{VERSION}.zip': plugin_files,
-        f'lovestory-desktop-{VERSION}.mcpb': extension,
-        f'lovestory-alerts-{VERSION}.zip': alerts,
+        f'claude-codex-live-bridge-codex-{VERSION}.zip': plugin_files,
+        f'claude-codex-live-bridge-desktop-{VERSION}.mcpb': extension,
+        f'claude-codex-live-bridge-alerts-{VERSION}.zip': alerts,
     }
     for name, files in packages.items():
         package(output / name, files)

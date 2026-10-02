@@ -84,7 +84,7 @@ export function captureDesktopHook(args) {
     ...(event === 'PostToolUseFailure' && args.error ? { error: sanitizeSummary(args.error, 300) } : {}) });
   // A first observed hook gives Claude its native identity for naming the feed.
   if (!meta && event !== 'SessionEnd') return { hookSpecificOutput: { hookEventName: event,
-    additionalContext: `lovestory recorded a Cowork activity hook for this task. Its activity_session_id is ${id}. This identity can be labeled through register_activity_session with the task name supplied by the user. Activity recording is separate from message delivery.` } };
+    additionalContext: `claude-codex-live-bridge recorded a Cowork activity hook for this task. Its activity_session_id is ${id}. This identity can be labeled through register_activity_session with the task name supplied by the user. Activity recording is separate from message delivery.` } };
   return {};
 }
 

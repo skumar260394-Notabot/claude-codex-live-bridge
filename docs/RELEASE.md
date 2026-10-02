@@ -1,4 +1,4 @@
-# Release verification — 0.3.0-beta.1
+# Release verification — 0.3.0-beta.2
 
 ## Checked locally on Windows
 

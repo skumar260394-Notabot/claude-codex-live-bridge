@@ -5,15 +5,15 @@ import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const sandbox = mkdtempSync(join(tmpdir(), 'lovestory-tests-'));
+const sandbox = mkdtempSync(join(tmpdir(), 'claude-codex-live-bridge-tests-'));
 const home = join(sandbox, 'home');
 mkdirSync(home);
 const env = { ...process.env, HOME: home, USERPROFILE: home,
   CODEX_HOME: join(home, '.codex'), CODEX_BRIDGE_ACTIVITY_HOME: join(home, '.codex-claude-live'),
   GIT_TERMINAL_PROMPT: '0' };
 const scripts = [
-  'plugins/lovestory/bridge/selftest.mjs',
-  'plugins/lovestory/bridge/selftest-reciprocal.mjs',
+  'plugins/claude-codex-live-bridge/bridge/selftest.mjs',
+  'plugins/claude-codex-live-bridge/bridge/selftest-reciprocal.mjs',
   'tests/reply-notifications.mjs',
 ];
 // Setting a temp home must prevent reads of personal Codex sessions or queues.

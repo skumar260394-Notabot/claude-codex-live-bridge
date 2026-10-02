@@ -14,7 +14,7 @@ for line in (DIST / 'SHA256SUMS.txt').read_text().splitlines():
     digest, name = line.split('  ', 1)
     assert hashlib.sha256((DIST / name).read_bytes()).hexdigest() == digest
     checks.append(name)
-with tempfile.TemporaryDirectory(prefix='lovestory-package-') as temporary:
+with tempfile.TemporaryDirectory(prefix='claude-codex-live-bridge-package-') as temporary:
     sandbox = Path(temporary)
     env = dict(os.environ, HOME=str(sandbox/'home'), USERPROFILE=str(sandbox/'home'),
                CODEX_HOME=str(sandbox/'home/.codex'), CODEX_BRIDGE_ACTIVITY_HOME=str(sandbox/'home/.codex-claude-live'))
@@ -37,5 +37,5 @@ with tempfile.TemporaryDirectory(prefix='lovestory-package-') as temporary:
         assert len(messages[2]['result']['tools']) > 10
         if name.endswith('.mcpb'):
             for module in ('common.mjs','protocol.mjs','desktop-activity.mjs','codex-cli.mjs'):
-                assert (destination/'server'/module).read_bytes() == (ROOT/'plugins/lovestory/bridge'/module).read_bytes()
+                assert (destination/'server'/module).read_bytes() == (ROOT/'plugins/claude-codex-live-bridge/bridge'/module).read_bytes()
 print(json.dumps({'fresh_package_startup':'passed','checksums':'passed','packages':checks,'live_host_installation':'not verified'}))

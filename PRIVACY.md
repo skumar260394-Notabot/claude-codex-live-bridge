@@ -1,6 +1,6 @@
 # Privacy
 
-lovestory has no hosted relay, analytics or tracking service. It uses local files and the installed clients' supported interfaces.
+claude-codex-live-bridge has no hosted relay, analytics or tracking service. It uses local files and the installed clients' supported interfaces.
 
 ## Data stored locally
 
@@ -14,6 +14,6 @@ When peers send or retrieve messages, the message and selected context enter Cla
 
 ## Controls and retention
 
-Activity collection can be disconnected using the bridge's project disconnect tools. Use `disable_reply_notifications` to disable a selected Desktop binding; disabling does not delete pending messages. Remove the Desktop extension or companion using Claude's settings, and remove lovestory using Codex's plugin controls. These actions preserve local history.
+Activity collection can be disconnected using the bridge's project disconnect tools. Use `disable_reply_notifications` to disable a selected Desktop binding; disabling does not delete pending messages. Remove the Desktop extension or companion using Claude's settings, and remove claude-codex-live-bridge using Codex's plugin controls. These actions preserve local history.
 
 There is no automatic retention expiry in this preview. After stopping the bridge clients, you can delete the local `.codex-claude-live` directory yourself to erase its history and configuration. Do not upload it when reporting a bug. Share minimal redacted examples instead.
