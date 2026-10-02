@@ -5,6 +5,22 @@ description: Collaborate with Claude Code in a local project or Claude Desktop t
 
 # Collaborate with Claude
 
+## Updates and login requirements
+
+Claude Desktop's extension uses its own signed-in app connection. It does not
+require Claude Code installation or a Claude CLI login. Only work through
+Claude Code, including its Remote Control sessions, requires Claude Code's
+own login. Do not ask Desktop users to log into the CLI to repair a connector.
+
+After a Codex plugin update, run `connect_project` for each project already
+connected to Claude Code. It refreshes existing managed hook and channel
+script paths, preserves other settings, and reports `hooks_updated`. Reload
+the affected Claude Code session if needed. Do not create a replacement chat.
+`bridge_status` distinguishes configured entries from scripts that exist:
+inspect `setup.claude_paths`, missing files/events and `refresh_needed` before
+claiming the setup works. File existence still does not prove a hook loaded or
+a channel connected; use real events and acknowledgements.
+
 claude-codex-live-bridge resolves the Codex CLI at every status/send, including complete
 Windows app bundles. Missing CODEX_BRIDGE_CLI overrides fall back with a
 diagnostic. Check codex_cli source/path before diagnosing failed wake-up; do
@@ -20,7 +36,7 @@ deliberately; the chosen Codex chat determines the bridge's project store. An
 optional `project_path` filters or verifies it. Codex and Claude must never
 infer the target from the Claude chat title or silently choose the newest chat.
 Ordinary Desktop Chat checks replies with `read_codex_messages` and a call ID.
-The reply-only companion 0.3.0-beta.2 can check selected calls directly only where
+The reply-only companion 0.3.0-beta.3 can check selected calls directly only where
 the host supports its MCP tool hook. It outputs no empty-inbox reminders.
 Direct transport must be demonstrated by a native probe and real message test. Neither route wakes a fully idle chat. `codex queue` targets an existing
 Codex chat and never creates a new one.
@@ -40,10 +56,10 @@ recorded events are visible. A quiet feed or last_status never proves Claude is
 idle or still working. Report useful actions, results and blockers, not hidden
 reasoning. Activity publishing requires an explicit user request.
 
-### Reply-only alerts in companion 0.3.0-beta.2
+### Reply-only alerts in companion 0.3.0-beta.3
 
 Activity reporting and per-step inbox polling reminders are removed. The
-matching Desktop extension 0.3.0-beta.2 adds reply_hook, prepare_reply_notifications,
+matching Desktop extension 0.3.0-beta.3 adds reply_hook, prepare_reply_notifications,
 reply_notification_status and disable_reply_notifications. The public companion has identity claude-codex-live-bridge-alerts and display name claude-codex-live-bridge Alerts. Direct MCP hooks at UserPromptSubmit, PostToolUse and
 PostToolUseFailure return peer context only when a selected call has pending
 Codex messages. Empty results contain no text. There are no Stop hooks, timers,

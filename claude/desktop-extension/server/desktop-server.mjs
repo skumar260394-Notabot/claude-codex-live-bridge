@@ -56,7 +56,7 @@ const INSTRUCTIONS = [
   '',
   'Use codex_sessions and codex_activity to see what Codex is doing before raising something.',
   'Activity reporting is optional and separate from reply notifications. Do not call report_activity unless the user explicitly requests a report or enables continuing reporting. Stop recurring reports when the user disables them. Historical activity feeds remain available.',
-  'The reply-only companion 0.3.0-beta.2 uses reply_hook at UserPromptSubmit, PostToolUse and PostToolUseFailure. Set up an explicitly selected existing open call with prepare_reply_notifications, including the existing activity_session_id if this call already has an activity subscription. Run its returned harmless probe_command in THIS chat, then check reply_notification_status. Do not call reply_hook from the model, choose the newest session, or manufacture a receipt. Empty output means no pending peer context; it does not prove the host ran hooks. Only hook_observed in reply_notification_status proves this probe reached the connector; that is separate from the activity feed\'s hook_observed. The host must support MCP tool hooks for this connector: deployment remains unverified until the probe and a real pending-message test succeed. Unsupported hosts keep manual read_codex_messages. Alerts do not wake a fully idle chat, call a timer, or publish activity reports.'
+  'The reply-only companion 0.3.0-beta.3 uses reply_hook at UserPromptSubmit, PostToolUse and PostToolUseFailure. Set up an explicitly selected existing open call with prepare_reply_notifications, including the existing activity_session_id if this call already has an activity subscription. Run its returned harmless probe_command in THIS chat, then check reply_notification_status. Do not call reply_hook from the model, choose the newest session, or manufacture a receipt. Empty output means no pending peer context; it does not prove the host ran hooks. Only hook_observed in reply_notification_status proves this probe reached the connector; that is separate from the activity feed\'s hook_observed. The host must support MCP tool hooks for this connector: deployment remains unverified until the probe and a real pending-message test succeed. Unsupported hosts keep manual read_codex_messages. Alerts do not wake a fully idle chat, call a timer, or publish activity reports.'
 ].join('\n');
 
 /* --------------------------------------------------------------- plumbing */
@@ -383,7 +383,7 @@ for await (const line of lines) {
       result = {
         protocolVersion: request.params?.protocolVersion ?? '2025-06-18',
         capabilities: { tools: {} },
-        serverInfo: { name: 'codex-live-bridge', version: '0.3.0-beta.2' },
+        serverInfo: { name: 'codex-live-bridge', version: '0.3.0-beta.3' },
         instructions: INSTRUCTIONS
       };
     } else if (request.method === 'ping') result = {};

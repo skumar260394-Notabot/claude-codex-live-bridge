@@ -1,8 +1,8 @@
-# Claude Codex Live Bridge Alerts 0.3.0-beta.2
+# Claude Codex Live Bridge Alerts 0.3.0-beta.3
 
 Public companion identity: claude-codex-live-bridge-alerts. Activity and
 per-step polling reminders are removed. Install the companion ZIP through
-Customize > Plugins, and the matching claude-codex-live-bridge 0.3.0-beta.2 MCPB through
+Customize > Plugins, and the matching claude-codex-live-bridge 0.3.0-beta.3 MCPB through
 Settings > Extensions > Advanced settings > Install Extension.
 
 ## Delivery

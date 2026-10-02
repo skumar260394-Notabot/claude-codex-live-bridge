@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.0-beta.3 — 2026-10-02
+
+- Reconnecting a Claude Code project refreshes old managed hook and channel
+  script paths, preserving other hooks, servers, permissions and custom options.
+- Status distinguishes saved entries from usable scripts, reports missing
+  lifecycle events/files and offers the repair step. Saved configuration alone
+  does not establish a live channel or loaded hook.
+- A conflicting third-party server is preserved and connection setup reports
+  the failure instead of claiming success.
+- Added six isolated upgrade regression checks and clarified that Desktop-only
+  use requires neither Claude Code installation nor its CLI login.
+- After updating, Claude Code users should run `connect_project` for existing
+  connected projects and reload their session as needed. No cloud-session
+  connector change is included in this release.
+
 ## 0.3.0-beta.2 — 2026-10-02
 
 Renamed the public project to **Claude Codex Live Bridge** at the owner's request. Repository and current installation links use `claude-codex-live-bridge`. Matching Codex, Desktop and alert companion packages have the new identity. Protocol storage and the internal Codex MCP key are preserved.

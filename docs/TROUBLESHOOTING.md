@@ -5,6 +5,9 @@
 | Extension appears as a chat attachment | Install through Settings → Extensions, not the conversation's file attachment button. |
 | Codex updated and wake fails | Inspect executable discovery in bridge status. Remove an obsolete `CODEX_BRIDGE_CLI` override or set a valid executable. Normal discovery avoids version-pinned folders. |
 | Message is queued but unseen | Check the exact target endpoint, host state and actual acknowledgement. Queue acceptance is not proof of model visibility. |
+| Claude Code stopped receiving after a plugin update | Run `connect_project` again in each connected project; it refreshes managed hook and channel paths without overwriting other settings. Reload the affected Claude Code session. Inspect `setup.claude_paths` for missing files or events. |
+| Claude Code authentication expired | Sign into Claude Code using its normal login. This affects Claude Code and Remote Control, not the standalone Claude Desktop connector. |
+| Asked to install or log into Claude CLI for Desktop | Desktop-only use does not require it. Check the installed Desktop extension and selected conversation's tools instead. |
 | No Codex hook observed | Verify hooks were trusted/loaded and both peers use the same project root. A plugin's cached working directory is not necessarily the shared project. |
 | Wrong project | Choose the exact existing Codex chat by name and its endpoint. Use `project_path` deliberately; never infer it from a title. |
 | Claude Desktop reply does not appear | Read the call with `read_codex_messages`. Idle Desktop wake is not provided. |

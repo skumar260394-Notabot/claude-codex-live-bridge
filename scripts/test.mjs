@@ -14,6 +14,7 @@ const env = { ...process.env, HOME: home, USERPROFILE: home,
 const scripts = [
   'plugins/claude-codex-live-bridge/bridge/selftest.mjs',
   'plugins/claude-codex-live-bridge/bridge/selftest-reciprocal.mjs',
+  'plugins/claude-codex-live-bridge/bridge/selftest-setup.mjs',
   'tests/reply-notifications.mjs',
 ];
 // Setting a temp home must prevent reads of personal Codex sessions or queues.

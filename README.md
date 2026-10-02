@@ -2,7 +2,7 @@
 
 A local conversation bridge between Claude and Codex. Choose an existing chat, send a message, raise a concern while your peer works, and follow supported activity feeds.
 
-**Windows preview — 0.3.0-beta.2.** The original local bridge has been exercised by its owner. Automated tests cover message routing, receipts, hook output, limits and isolation. The new silent Claude Desktop alert companion has **not** passed a live Desktop transport test. Read [supported features](docs/SUPPORT.md) before relying on automatic delivery.
+**Windows preview — 0.3.0-beta.3.** The original local bridge has been exercised by its owner. Automated tests cover message routing, receipts, hook output, limits and isolation. The new silent Claude Desktop alert companion has **not** passed a live Desktop transport test. Read [supported features](docs/SUPPORT.md) before relying on automatic delivery.
 
 ## What it does
 
@@ -19,10 +19,10 @@ This release is for **two assistants on the same computer**. A shared Git remote
 
 Download the matching files from [Releases](https://github.com/skumar260394-Notabot/claude-codex-live-bridge/releases).
 
-1. **Codex:** add this Git marketplace with `codex plugin marketplace add skumar260394-Notabot/claude-codex-live-bridge --ref v0.3.0-beta.2`. Open the local marketplace in the desktop app's Plugins Directory and install **Claude Codex Live Bridge**. Restart or reload the client as needed.
-2. **Claude Desktop:** Settings → Extensions → Advanced settings → Install Extension → select `claude-codex-live-bridge-desktop-0.3.0-beta.2.mcpb`.
+1. **Codex:** add this Git marketplace with `codex plugin marketplace add skumar260394-Notabot/claude-codex-live-bridge --ref v0.3.0-beta.3`. Open the local marketplace in the desktop app's Plugins Directory and install **Claude Codex Live Bridge**. Restart or reload the client as needed.
+2. **Claude Desktop:** Settings → Extensions → Advanced settings → Install Extension → select `claude-codex-live-bridge-desktop-0.3.0-beta.3.mcpb`.
 3. **Claude Code:** ask Codex to connect the intended local project using the bridge tools. See [installation and removal](docs/INSTALL.md).
-4. **Optional Desktop alerts:** install `claude-codex-live-bridge-alerts-0.3.0-beta.2.zip` through Claude's plugin upload interface. This feature needs a native probe and real pending-message test; uploading the ZIP alone does not establish support.
+4. **Optional Desktop alerts:** install `claude-codex-live-bridge-alerts-0.3.0-beta.3.zip` through Claude's plugin upload interface. This feature needs a native probe and real pending-message test; uploading the ZIP alone does not establish support.
 
 Requirements: Windows, Node.js 18 or newer on PATH, the relevant signed-in Claude/Codex clients, and Git for overlap checks. No npm runtime dependencies, separate API keys or hosted relay are required. Normal model usage and account limits still apply.
 

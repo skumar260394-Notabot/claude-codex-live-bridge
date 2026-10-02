@@ -1,7 +1,7 @@
 {
   "name": "claude-codex-live-bridge-alerts",
   "displayName": "Claude Codex Live Bridge Alerts",
-  "version": "0.3.0-beta.2",
+  "version": "0.3.0-beta.3",
   "description": "Reply-only raised hands through a supported connector hook. Silent on empty inboxes; no activity-report reminders. Direct host transport must pass a live probe.",
   "author": {
     "name": "skumar260394-Notabot"

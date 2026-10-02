@@ -4,12 +4,17 @@
 
 Windows, Node.js 18+ on PATH, an installed local Codex client, and Claude Desktop and/or Claude Code. Sign into the clients using your normal account. Git is needed only for overlap checks. Python 3.9+ is a build prerequisite, not a runtime requirement for the bridge. Use matching release assets.
 
+**Desktop-only use does not require Claude Code or a Claude CLI login.** The
+Desktop extension connects through the signed-in Claude app. Claude Code and
+its Remote Control sessions require their own Claude Code login; signing into
+the Desktop app does not establish that login.
+
 ## Codex
 
 Add the repository marketplace:
 
 ```sh
-codex plugin marketplace add skumar260394-Notabot/claude-codex-live-bridge --ref v0.3.0-beta.2
+codex plugin marketplace add skumar260394-Notabot/claude-codex-live-bridge --ref v0.3.0-beta.3
 ```
 
 Install **Claude Codex Live Bridge** from that local source in the desktop Plugins Directory. Alternatively, clone the repository and add its local directory as a marketplace. Review and trust hooks using your client's hook controls (`/hooks` where available); restart/reload the session if required. No hook is proven active until a real event is observed.
@@ -18,13 +23,13 @@ The internal MCP server key is `claude-live-bridge`, retained for protocol compa
 
 ## Claude Desktop
 
-Download `claude-codex-live-bridge-desktop-0.3.0-beta.2.mcpb`. Use Settings → Extensions → Advanced settings → Install Extension. Select the MCPB; do not attach it to a conversation as a document. Enable claude-codex-live-bridge in the conversation's connector menu. Restart Claude if the app requests it or fails to load the server.
+Download `claude-codex-live-bridge-desktop-0.3.0-beta.3.mcpb`. Use Settings → Extensions → Advanced settings → Install Extension. Select the MCPB; do not attach it to a conversation as a document. Enable claude-codex-live-bridge in the conversation's connector menu. Restart Claude if the app requests it or fails to load the server.
 
 Ask Claude to list Codex chats with `codex_sessions`, choose the exact intended `thread:<id>`, and open a greeting-only `call_codex`. An optional absolute `project_path` verifies or filters the destination. No folder is guessed from a chat title. Read replies using `read_codex_messages` and the returned call ID.
 
 ### Optional experimental raised hands
 
-Upload `claude-codex-live-bridge-alerts-0.3.0-beta.2.zip` through Claude's plugin installation interface, then enable it. The host must support a direct `mcp_tool` hook into the already configured Desktop connector. The shipped server name `Claude Codex Live Bridge` must match the host's actual configured connector name. This transport is documented for Claude Code; Desktop/task-host support is unverified.
+Upload `claude-codex-live-bridge-alerts-0.3.0-beta.3.zip` through Claude's plugin installation interface, then enable it. The host must support a direct `mcp_tool` hook into the already configured Desktop connector. The shipped server name `Claude Codex Live Bridge` must match the host's actual configured connector name. This transport is documented for Claude Code; Desktop/task-host support is unverified.
 
 In the exact existing Claude chat, use `prepare_reply_notifications` for an explicitly selected open call. If a legacy activity subscription owns that call, supply its same `activity_session_id`. Run the returned harmless `probe_command` as an ordinary command in that chat, then inspect `reply_notification_status`. Do **not** call `reply_hook` from the model or fabricate a hook receipt. Renew an expired unbound probe with `retry_probe: true`.
 
@@ -49,6 +54,15 @@ Use `list_sessions` to choose the exact existing Claude session endpoint. A sess
 The public identities are new, so installing claude-codex-live-bridge does not replace the privately created Claude Live Bridge or Codex Live Bridge extension. Close old calls, disconnect old project hooks using that version's tools, and disable/remove the old extension and companion through their clients. Then install claude-codex-live-bridge. Never run both sets of hooks on the same project. Local history remains under the legacy `.codex-claude-live` directory; clear it yourself if you want a fresh start.
 
 For future claude-codex-live-bridge releases, replace the MCPB and companion with matching assets, refresh the Codex marketplace, and reload clients as needed. A pinned Git ref must be updated deliberately.
+
+For each project already connected to **Claude Code**, run `connect_project`
+again after updating the Codex plugin. This refreshes managed script paths if
+the plugin moved, including paths into an old version cache. It preserves
+other hooks, servers, permissions and custom options. Then reload the affected
+Claude Code session as required. `hooks_updated` reports refreshed hooks;
+`bridge_status.setup.claude_paths` identifies missing scripts and incomplete
+events. Configured, usable, loaded and live are separate states. Desktop-only
+users do not need this project hook setup.
 
 ## Removal
 

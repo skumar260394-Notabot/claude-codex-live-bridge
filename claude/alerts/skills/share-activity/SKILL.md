@@ -7,7 +7,7 @@ description: Configure reply-only Codex raised hands for this existing Claude ch
 
 This skill name is retained for update compatibility. The companion no longer
 asks Claude to publish reports or poll after each tool. Use desktop extension
-claude-codex-live-bridge 0.3.0-beta.2 or later.
+claude-codex-live-bridge 0.3.0-beta.3 or later.
 
 1. Retain this conversation and its explicitly selected open bridge call. Do
    not guess another chat, call, activity ID, or newest session.

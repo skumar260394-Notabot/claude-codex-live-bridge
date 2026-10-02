@@ -1,9 +1,11 @@
-# Release verification — 0.3.0-beta.2
+# Release verification — 0.3.0-beta.3
 
 ## Checked locally on Windows
 
 - Source checks: JSON/manifests, JavaScript syntax, personal path and credential patterns.
 - Legacy hook/setup suite passed.
+- Setup upgrade suite: six checks passed for missing caches, existing old files,
+  settings preservation, repeat setup, incomplete events and server collisions.
 - Reciprocal MCP/channel/protocol suite: 20 checks passed with a recording CLI stub.
 - Reply-only notifications: 46 checks passed with isolated homes and synthetic sessions.
 - Three built archives passed integrity and SHA-256 verification.

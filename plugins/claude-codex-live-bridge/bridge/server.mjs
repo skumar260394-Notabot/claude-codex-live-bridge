@@ -1,6 +1,6 @@
 import { createInterface } from 'node:readline';
 import { randomUUID } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -25,6 +25,38 @@ function isOurs(handler, root) {
   return handler?.type === 'command' && handler.command === 'node' &&
     Array.isArray(handler.args) && handler.args[1] === root && handler.args[2] === '--claude-live-bridge';
 }
+// Ownership and usability are separate: an old owned entry may target a deleted cache.
+function scriptExists(path, root) {
+  if (typeof path !== 'string' || !path.trim()) return false;
+  try { return statSync(resolve(root, path)).isFile(); }
+  catch { return false; }
+}
+function claudeSetup(root) {
+  const hooks = readJson(settingsPath(root), null)?.hooks ?? {};
+  const owned = events.flatMap(event => (Array.isArray(hooks[event]) ? hooks[event] : [])
+    .flatMap(group => Array.isArray(group?.hooks) ? group.hooks : [])
+    .filter(handler => isOurs(handler, root)).map(handler => ({ event, handler })));
+  const missingEvents = events.filter(event => !owned.some(item =>
+    item.event === event && scriptExists(item.handler.args[0], root)));
+  const entry = readJson(mcpConfigPath(root), null)?.mcpServers?.[CHANNEL_SERVER_NAME];
+  const channelConfigured = isOurChannelEntry(entry);
+  const channelUsable = channelConfigured && entry.command === 'node' &&
+    entry.args?.[1] === root && scriptExists(entry.args[0], root);
+  return {
+    hooks_configured: owned.length > 0,
+    hooks_usable: missingEvents.length === 0,
+    missing_hook_events: missingEvents,
+    missing_hook_scripts: owned.filter(item => !scriptExists(item.handler.args[0], root))
+      .map(item => ({ event: item.event, path: item.handler.args[0] ?? null })),
+    channel_configured: channelConfigured,
+    channel_usable: !!channelUsable,
+    channel_script: channelConfigured ? entry.args?.[0] ?? null : null,
+    channel_script_exists: channelConfigured && scriptExists(entry.args?.[0], root),
+    refresh_needed: owned.some(item => item.handler.args[0] !== hookPath) ||
+      (channelConfigured && (entry.args?.[0] !== channelScript || entry.args?.[1] !== root ||
+        entry.command !== 'node'))
+  };
+}
 function writeSettings(path, value) {
   mkdirSync(resolve(path, '..'), { recursive: true });
   const temp = `${path}.${process.pid}.${randomUUID()}.tmp`;
@@ -40,19 +72,29 @@ function connectProject(args) {
   if (settings.hooks == null) settings.hooks = {};
   if (typeof settings.hooks !== 'object' || Array.isArray(settings.hooks)) throw new Error('Claude hooks setting must be an object');
   let added = 0;
+  let updated = 0;
   for (const event of events) {
     if (settings.hooks[event] == null) settings.hooks[event] = [];
     if (!Array.isArray(settings.hooks[event])) throw new Error(`Claude hook setting ${event} must be an array`);
+    // Refresh only our script argument; preserve grouping, options and other hooks.
+    settings.hooks[event] = settings.hooks[event].map(group => {
+      if (!Array.isArray(group?.hooks)) return group;
+      return { ...group, hooks: group.hooks.map(handler => {
+        if (!isOurs(handler, root) || handler.args[0] === hookPath) return handler;
+        updated++;
+        return { ...handler, args: [hookPath, ...handler.args.slice(1)] };
+      }) };
+    });
     const present = settings.hooks[event].some(group => Array.isArray(group?.hooks) && group.hooks.some(h => isOurs(h, root)));
     if (!present) { settings.hooks[event].push({ hooks: [bridgeHandler(root)] }); added++; }
   }
-  if (added) writeSettings(path, settings);
+  if (added || updated) writeSettings(path, settings);
   mkdirSync(join(projectDir(root), 'sessions'), { recursive: true });
   // Also register the reciprocal channel, so one call connects both directions.
   let channel;
   try { channel = connectClaudeChannel(root); }
   catch (error) { channel = { error: error.message }; }
-  return { project_path: root, settings_path: path, hooks_added: added, connected: true,
+  return { project_path: root, settings_path: path, hooks_added: added, hooks_updated: updated, connected: !channel?.error,
     claude_channel: channel,
     note: 'Visibility begins when Claude Code loads these hooks and emits its next event. An idle session has no event to receive a raised hand until it resumes.',
     channel_note: channel?.error
@@ -349,7 +391,8 @@ function connectClaudeChannel(root) {
     throw new Error(`.mcp.json already defines an MCP server named "${CHANNEL_SERVER_NAME}" that does not point at this bridge. Rename or remove it first; refusing to overwrite someone else's server.`);
   }
   const desired = { command: 'node', args: [channelScript, root] };
-  if (existing && existing.args?.[1] === root) {
+  if (existing && existing.command === desired.command &&
+      existing.args?.[0] === channelScript && existing.args?.[1] === root) {
     return { mcp_config_path: path, channel_server: CHANNEL_SERVER_NAME, changed: false, launch_command: launchCommand() };
   }
   // Ours but stale (moved plugin or different project root): update in place and
@@ -386,25 +429,28 @@ function bridgeStatus(args) {
   const channels = listChannels(root);
   const cli = resolveCodexCli();
   const codexHook = codexHookObservation(root);
-  const registered = isOurChannelEntry(readJson(mcpConfigPath(root), null)?.mcpServers?.[CHANNEL_SERVER_NAME]);
+  const claude = claudeSetup(root);
+  const registered = claude.channel_usable;
   const liveChannel = channels.some(c => c.live);
   const codexHooksInstalled = Object.values(readJson(codexHooksPath(root), null)?.hooks ?? {})
     .some(groups => Array.isArray(groups) && groups.some(g => Array.isArray(g?.hooks) && g.hooks.some(h => isOurCodexHook(h, root))));
-  const claudeHooksInstalled = Object.values(readJson(settingsPath(root), null)?.hooks ?? {})
-    .some(groups => Array.isArray(groups) && groups.some(g => Array.isArray(g?.hooks) && g.hooks.some(h => isOurs(h, root))));
+  const claudeHooksInstalled = claude.hooks_usable;
   return {
     protocol: PROTOCOL_VERSION, project_path: root, store: projectDir(root),
     desktop_activity: listDesktopActivity({ project_path: root }),
     setup: {
+      claude_hooks_configured: claude.hooks_configured,
       claude_hooks_installed: claudeHooksInstalled,
+      claude_channel_configured: claude.channel_configured,
+      claude_paths: claude,
       claude_channel_registered: registered,
       claude_channel_running: liveChannel,
       codex_hooks_installed: codexHooksInstalled,
       codex_hook_observed: codexHook.observed,
       codex_hook_last_seen_at: codexHook.last_event_at,
       complete: claudeHooksInstalled && registered && liveChannel && codexHook.observed,
-      next_step: !claudeHooksInstalled ? 'Run connect_project to install the Claude hooks.'
-        : !registered ? `Run connect_project to register the channel in .mcp.json.`
+      next_step: !claudeHooksInstalled || !registered || claude.refresh_needed
+        ? 'Run connect_project to install or refresh Claude hook and channel paths; then reload the Claude Code session as required.'
         : !liveChannel ? `Channel registered but not running. Start Claude Code with: ${launchCommand()}`
         : !codexHooksInstalled && !codexHook.observed ? 'Run connect_codex_project, then trust the hooks with /hooks in Codex and restart the session.'
         : !codexHook.observed ? 'Codex hook config exists, but no hook event has been observed. Trust it with /hooks, restart Codex, and let this project emit an event.'
@@ -418,7 +464,9 @@ function bridgeStatus(args) {
       codex_to_claude_channel: channels.some(c => c.live)
         ? 'Live. Messages push into the open Claude session even while it is idle.'
         : 'No live channel. Start Claude Code with the bridge channel for idle delivery.',
-      codex_to_claude_hook: 'For a session with trusted bridge hooks loaded, pending messages can be delivered at its next hook event.',
+      codex_to_claude_hook: claudeHooksInstalled
+        ? 'Hook scripts exist; trusted hooks must be loaded before pending messages can arrive at the next hook event.'
+        : 'Claude hook setup is incomplete or references missing scripts. Run connect_project to repair it; delivery is not established.',
       claude_to_codex: cli.ok
         ? `codex queue can accept messages, but acceptance does not prove Codex saw them. ${codexHook.observed ? 'A Codex hook has run in this project; it can inject a pending message at the next supported hook event.' : 'No Codex hook has run in this project, so active-turn delivery is unverified.'}`
         : `No codex queue executable is available. ${codexHook.observed ? 'A Codex hook has run in this project; it can claim pending messages at the next supported hook event.' : 'No Codex hook has run in this project either; messages only wait in the inbox.'}`
@@ -568,7 +616,7 @@ for await (const line of lines) {
   if (request.id === undefined) continue;
   try {
     let result;
-    if (request.method === 'initialize') result = { protocolVersion: request.params?.protocolVersion ?? '2025-06-18', capabilities: { tools: {} }, serverInfo: { name: 'claude-live-bridge', version: '0.3.0-beta.2' } };
+    if (request.method === 'initialize') result = { protocolVersion: request.params?.protocolVersion ?? '2025-06-18', capabilities: { tools: {} }, serverInfo: { name: 'claude-live-bridge', version: '0.3.0-beta.3' } };
     else if (request.method === 'ping') result = {};
     else if (request.method === 'tools/list') result = { tools };
     else if (request.method === 'tools/call') {
