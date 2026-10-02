@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.3.0-beta.4 — 2026-10-02
+
+- Read the newest compatible Codex state database instead of hard-coding
+  `state_5.sqlite`; support title-only schemas, expose discovery diagnostics,
+  and exclude archived/deleted chats from stale indexes and hook logs.
+- Require Node.js 22.13.0+ for verified named-chat routing with `node:sqlite`.
+- Use a harmless Node command for the native alert probe on Windows and POSIX.
+- Declare hook paths explicitly in both Codex manifest formats.
+- Probe actual Codex queue support; executable presence alone is insufficient.
+- Protect generated project settings with local Git exclusions; refuse to
+  rewrite tracked machine configs. Preserve unrelated settings and Git rules.
+- Clarify Desktop companion versus Claude Code channel server names.
+- Add isolated regressions for database upgrades, unavailable commands,
+  native shell probes and local-config protection. No cloud setup or live
+  Claude alert test is included.
+
 ## 0.3.0-beta.3 — 2026-10-02
 
 - Reconnecting a Claude Code project refreshes old managed hook and channel

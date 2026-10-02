@@ -36,6 +36,6 @@ with tempfile.TemporaryDirectory(prefix='claude-codex-live-bridge-package-') as 
         assert messages[1].get('result'), run.stdout
         assert len(messages[2]['result']['tools']) > 10
         if name.endswith('.mcpb'):
-            for module in ('common.mjs','protocol.mjs','desktop-activity.mjs','codex-cli.mjs'):
+            for module in ('common.mjs','protocol.mjs','desktop-activity.mjs','codex-cli.mjs','codex-sessions.mjs'):
                 assert (destination/'server'/module).read_bytes() == (ROOT/'plugins/claude-codex-live-bridge/bridge'/module).read_bytes()
 print(json.dumps({'fresh_package_startup':'passed','checksums':'passed','packages':checks,'live_host_installation':'not verified'}))

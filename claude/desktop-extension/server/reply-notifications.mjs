@@ -61,7 +61,7 @@ function describe(value) {
     hook_observed_at: observed?.at || null, activity_reporting: false,
     state: !value.enabled ? 'disabled' : observed ? 'bound_to_observed_hook' : 'awaiting_probe_hook',
     ...(observed ? {} : { probe_token: value.probe_token, probe_expires_at: value.expires_at,
-      probe_command: `printf '%s\\n' '${value.probe_token}'` }),
+      probe_command: `node -e "console.log('${value.probe_token}')"` }),
     note: 'Hook receipt proves the connector callback ran, not that Claude saw a message. Only acknowledgement or reply proves model receipt. No idle wake, timers, or activity reports.'
   };
 }

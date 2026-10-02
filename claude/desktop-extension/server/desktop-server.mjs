@@ -19,6 +19,7 @@ import { projectDir, projectRoot, sanitizeSummary } from './common.mjs';
 import { desktopActivityReadTools, desktopActivityWriteTools, registerDesktopActivity, reportDesktopActivity, captureDesktopHook, listDesktopActivity, watchDesktopActivity } from './desktop-activity.mjs';
 import { subscribeDesktopCall, subscribedDesktopMessages } from './desktop-delivery.mjs';
 import { replyNotificationTools, prepareReplyNotifications, replyNotificationStatus, disableReplyNotifications, replyHook } from './reply-notifications.mjs';
+import { readCodexChats } from './codex-sessions.mjs';
 import {
   DEFAULT_CHANNEL_ID, DEFAULT_MAX_TURNS, MAX_OPEN_CALLS, MAX_TURNS_LIMIT, PROTOCOL_VERSION,
   bridgeConfigPath, callChain, maxConversationTurns,
@@ -56,7 +57,7 @@ const INSTRUCTIONS = [
   '',
   'Use codex_sessions and codex_activity to see what Codex is doing before raising something.',
   'Activity reporting is optional and separate from reply notifications. Do not call report_activity unless the user explicitly requests a report or enables continuing reporting. Stop recurring reports when the user disables them. Historical activity feeds remain available.',
-  'The reply-only companion 0.3.0-beta.3 uses reply_hook at UserPromptSubmit, PostToolUse and PostToolUseFailure. Set up an explicitly selected existing open call with prepare_reply_notifications, including the existing activity_session_id if this call already has an activity subscription. Run its returned harmless probe_command in THIS chat, then check reply_notification_status. Do not call reply_hook from the model, choose the newest session, or manufacture a receipt. Empty output means no pending peer context; it does not prove the host ran hooks. Only hook_observed in reply_notification_status proves this probe reached the connector; that is separate from the activity feed\'s hook_observed. The host must support MCP tool hooks for this connector: deployment remains unverified until the probe and a real pending-message test succeed. Unsupported hosts keep manual read_codex_messages. Alerts do not wake a fully idle chat, call a timer, or publish activity reports.'
+  'The reply-only companion 0.3.0-beta.4 uses reply_hook at UserPromptSubmit, PostToolUse and PostToolUseFailure. Set up an explicitly selected existing open call with prepare_reply_notifications, including the existing activity_session_id if this call already has an activity subscription. Run its returned harmless probe_command in THIS chat, then check reply_notification_status. Do not call reply_hook from the model, choose the newest session, or manufacture a receipt. Empty output means no pending peer context; it does not prove the host ran hooks. Only hook_observed in reply_notification_status proves this probe reached the connector; that is separate from the activity feed\'s hook_observed. The host must support MCP tool hooks for this connector: deployment remains unverified until the probe and a real pending-message test succeed. Unsupported hosts keep manual read_codex_messages. Alerts do not wake a fully idle chat, call a timer, or publish activity reports.'
 ].join('\n');
 
 /* --------------------------------------------------------------- plumbing */
@@ -82,41 +83,9 @@ async function readCodexMessages(args) {
 
 /* ------------------------------------------------------------------ tools */
 
-function absoluteLocalPath(value) {
-  const drivePath = String(value ?? '').match(/[A-Za-z]:[\\/].*$/)?.[0];
-  return drivePath ? win32.normalize(drivePath) : null;
-}
-
-function localPath(value) { return absoluteLocalPath(value)?.toLowerCase() ?? null; }
-
 async function codexNames(root = null) {
-  const names = new Map();
-  const codexHome = process.env.CODEX_HOME || join(homedir(), '.codex');
-  try {
-    const { DatabaseSync } = await import('node:sqlite');
-    const db = new DatabaseSync(join(codexHome, 'state_5.sqlite'), { readOnly: true });
-    try {
-      for (const row of db.prepare('SELECT id, name, title, cwd, updated_at FROM threads WHERE archived = 0').all()) {
-        const project = absoluteLocalPath(row.cwd);
-        if (!project || (root && localPath(project) !== localPath(root)) || !existsSync(project)) continue;
-        const name = row.name || row.title;
-        names.set(row.id, { name: name ? sanitizeSummary(name, 120) : null,
-          project_path: project, verified_project: true,
-          updated_at: row.updated_at ? new Date(Number(row.updated_at) * 1000).toISOString() : null });
-      }
-    } finally { db.close(); }
-  } catch { /* Older Node or Codex installs may have no readable state database. */ }
-  try {
-    const lines = readFileSync(join(codexHome, 'session_index.jsonl'), 'utf8').split('\n');
-    for (const line of lines) {
-      try {
-        const row = JSON.parse(line);
-        if (row.id && row.thread_name && !names.has(row.id)) names.set(row.id, {
-          name: sanitizeSummary(row.thread_name, 120), project_path: null,
-          verified_project: false, updated_at: row.updated_at ?? null });
-      } catch { /* Ignore an incomplete index entry. */ }
-    }
-  } catch { /* The index is optional. */ }
+  const { names, discovery } = await readCodexChats({ root });
+  names.discovery = discovery;
   return names;
 }
 
@@ -127,7 +96,8 @@ async function codexSessions(args) {
   const projects = root ? [root] : [...new Set([...names.values()].filter(n => n.verified_project).map(n => n.project_path))];
   const observed = projects.flatMap(project => {
     const dir = join(projectDir(project), 'codex-sessions');
-    return (existsSync(dir) ? readdirSync(dir) : []).filter(name => name.endsWith('.jsonl')).map(name => {
+    return (existsSync(dir) ? readdirSync(dir) : []).filter(name => name.endsWith('.jsonl') &&
+      (!names.discovery.authoritative || names.has(name.slice(0, -6)))).map(name => {
     const session_id = name.slice(0, -6);
     const log = readJsonl(join(dir, name));
     const last = log.at(-1) ?? null;
@@ -151,7 +121,7 @@ async function codexSessions(args) {
     s.name?.toLowerCase().includes(query) || s.session_id.toLowerCase().includes(query));
   const sessions = matches
     .sort((a, b) => (b.updated_at ?? '').localeCompare(a.updated_at ?? '')).slice(0, root ? 30 : 100);
-  return { project_path: root, query: query || null, codex_sessions: sessions,
+  return { project_path: root, query: query || null, codex_sessions: sessions, discovery: names.discovery,
     note: 'These are existing Codex chats grouped by their own project_path. Choose an endpoint deliberately, including across projects. hook_observed=false means active-turn hook delivery has not been verified.' };
 }
 
@@ -383,7 +353,7 @@ for await (const line of lines) {
       result = {
         protocolVersion: request.params?.protocolVersion ?? '2025-06-18',
         capabilities: { tools: {} },
-        serverInfo: { name: 'codex-live-bridge', version: '0.3.0-beta.3' },
+        serverInfo: { name: 'codex-live-bridge', version: '0.3.0-beta.4' },
         instructions: INSTRUCTIONS
       };
     } else if (request.method === 'ping') result = {};

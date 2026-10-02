@@ -7,7 +7,7 @@
 // neither side has to guess whether the other actually saw anything.
 
 import { randomUUID } from 'node:crypto';
-import { findCodexCli } from './codex-cli.mjs';
+import { findCodexCli, checkCodexQueue } from './codex-cli.mjs';
 import { spawnSync } from 'node:child_process';
 import { homedir } from 'node:os';
 import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmdirSync, statSync, appendFileSync } from 'node:fs';
@@ -119,10 +119,10 @@ function withLock(target, fn) {
 
 /* ------------------------------------------------------- codex CLI wakeup */
 
-// `codex queue --thread <id> --message <text>` is the documented way to put a
+// Desktop clients advertising `codex queue --thread <id> --message <text>` can put a
 // message into an existing Codex session. We refuse to route model-authored
 // text through a shell, so we need a real executable rather than an npm shim.
-export function resolveCodexCli() { return findCodexCli(); }
+export function resolveCodexCli() { return checkCodexQueue(findCodexCli()); }
 
 export function wakeCodexThread(thread, text, { timeoutMs = 20000 } = {}) {
   const cli = resolveCodexCli();

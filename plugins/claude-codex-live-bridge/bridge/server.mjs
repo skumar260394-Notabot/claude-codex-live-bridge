@@ -6,6 +6,7 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { homedir } from 'node:os';
 import { desktopActivityReadTools, listDesktopActivity, watchDesktopActivity } from './desktop-activity.mjs';
+import { protectLocalConfigs } from './local-config.mjs';
 import { appendEvent, atomicJson, handDir, hookPath, listHandFiles, projectDir, projectRoot, readJson, safeSessionId, sanitizeSummary, sessionFile } from './common.mjs';
 import {
   DEFAULT_MAX_TURNS, MAX_OPEN_CALLS, MAX_TURNS_LIMIT, PROTOCOL_VERSION, bridgeConfigPath, maxConversationTurns,
@@ -67,6 +68,7 @@ function writeSettings(path, value) {
 function connectProject(args) {
   const root = projectRoot(args.project_path);
   const path = settingsPath(root);
+  const localConfig = protectLocalConfigs(root, [path, mcpConfigPath(root)]);
   const settings = readJson(path, {});
   if (!settings || typeof settings !== 'object' || Array.isArray(settings)) throw new Error('Claude local settings must be a JSON object');
   if (settings.hooks == null) settings.hooks = {};
@@ -95,7 +97,7 @@ function connectProject(args) {
   try { channel = connectClaudeChannel(root); }
   catch (error) { channel = { error: error.message }; }
   return { project_path: root, settings_path: path, hooks_added: added, hooks_updated: updated, connected: !channel?.error,
-    claude_channel: channel,
+    claude_channel: channel, local_config: localConfig,
     note: 'Visibility begins when Claude Code loads these hooks and emits its next event. An idle session has no event to receive a raised hand until it resumes.',
     channel_note: channel?.error
       ? `Could not register the channel in .mcp.json: ${channel.error}`
@@ -281,6 +283,7 @@ function isOurLegacyCodexHook(handler, root) {
 function connectCodexProject(args) {
   const root = projectRoot(args.project_path);
   const path = codexHooksPath(root);
+  const localConfig = protectLocalConfigs(root, [path]);
   const config = readJson(path, {});
   if (!config || typeof config !== 'object' || Array.isArray(config)) throw new Error('Codex hooks config must be a JSON object');
   if (config.hooks == null) config.hooks = {};
@@ -317,7 +320,7 @@ function connectCodexProject(args) {
   if (added || replaced) writeSettings(path, config);
   mkdirSync(join(projectDir(root), 'codex-sessions'), { recursive: true });
   return {
-    project_path: root, hooks_path: path, hooks_added: added, hooks_replaced: replaced, connected: true,
+    project_path: root, hooks_path: path, hooks_added: added, hooks_replaced: replaced, connected: true, local_config: localConfig,
     note: 'Codex hooks require trust before they run. Review them with /hooks in Codex, then restart the session so they load. Until then Claude cannot observe this Codex session.'
   };
 }
@@ -390,16 +393,17 @@ function connectClaudeChannel(root) {
   if (existing && !isOurChannelEntry(existing)) {
     throw new Error(`.mcp.json already defines an MCP server named "${CHANNEL_SERVER_NAME}" that does not point at this bridge. Rename or remove it first; refusing to overwrite someone else's server.`);
   }
+  const localConfig = protectLocalConfigs(root, [path]);
   const desired = { command: 'node', args: [channelScript, root] };
   if (existing && existing.command === desired.command &&
       existing.args?.[0] === channelScript && existing.args?.[1] === root) {
-    return { mcp_config_path: path, channel_server: CHANNEL_SERVER_NAME, changed: false, launch_command: launchCommand() };
+    return { mcp_config_path: path, channel_server: CHANNEL_SERVER_NAME, changed: false, local_config: localConfig, launch_command: launchCommand() };
   }
   // Ours but stale (moved plugin or different project root): update in place and
   // keep any env or extra keys the user added.
   config.mcpServers[CHANNEL_SERVER_NAME] = { ...(existing ?? {}), ...desired };
   writeSettings(path, config);
-  return { mcp_config_path: path, channel_server: CHANNEL_SERVER_NAME, changed: true, updated_existing: !!existing, launch_command: launchCommand() };
+  return { mcp_config_path: path, channel_server: CHANNEL_SERVER_NAME, changed: true, updated_existing: !!existing, local_config: localConfig, launch_command: launchCommand() };
 }
 
 // Ours only if it actually launches this bridge's channel script.
@@ -616,7 +620,7 @@ for await (const line of lines) {
   if (request.id === undefined) continue;
   try {
     let result;
-    if (request.method === 'initialize') result = { protocolVersion: request.params?.protocolVersion ?? '2025-06-18', capabilities: { tools: {} }, serverInfo: { name: 'claude-live-bridge', version: '0.3.0-beta.3' } };
+    if (request.method === 'initialize') result = { protocolVersion: request.params?.protocolVersion ?? '2025-06-18', capabilities: { tools: {} }, serverInfo: { name: 'claude-live-bridge', version: '0.3.0-beta.4' } };
     else if (request.method === 'ping') result = {};
     else if (request.method === 'tools/list') result = { tools };
     else if (request.method === 'tools/call') {

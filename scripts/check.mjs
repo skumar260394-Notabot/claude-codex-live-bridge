@@ -36,6 +36,9 @@ const marketplace = json('.agents/plugins/marketplace.json');
 assert.equal(marketplace.plugins[0].name, 'claude-codex-live-bridge');
 assert.ok(existsSync(join(root, marketplace.plugins[0].source.path)));
 const hooks = json('claude/alerts/hooks/hooks.json').hooks;
+assert.equal(json('plugins/claude-codex-live-bridge/plugin.json').extensions['com.openai'].hooks, './hooks/hooks.json');
+assert.equal(json('plugins/claude-codex-live-bridge/.codex-plugin/plugin.json').hooks, './hooks/hooks.json');
+assert.equal(json('claude/desktop-extension/manifest.json').compatibility.runtimes.node, '>=22.13.0');
 assert.deepEqual(Object.keys(hooks).sort(), ['PostToolUse', 'PostToolUseFailure', 'UserPromptSubmit']);
 for (const groups of Object.values(hooks)) for (const group of groups) for (const hook of group.hooks) {
   assert.equal(hook.type, 'mcp_tool'); assert.equal(hook.tool, 'reply_hook'); assert.equal(hook.server, 'Claude Codex Live Bridge');

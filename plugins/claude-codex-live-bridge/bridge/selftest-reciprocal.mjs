@@ -27,6 +27,7 @@ function ok(name) { results.push(name); process.stdout.write(`  ok  ${name}\n`);
 const stubLog = join(home, 'codex-queue-calls.jsonl');
 const stubJs = join(home, 'codex-stub.mjs');
 writeFileSync(stubJs, [
+  "if (process.argv.includes('--help')) { console.log('queue --thread <id> --message <text>'); process.exit(0); }",
   "import { appendFileSync } from 'node:fs';",
   `appendFileSync(${JSON.stringify(stubLog)}, JSON.stringify(process.argv.slice(2)) + '\\n');`,
   "process.stdout.write('queued\\n');"

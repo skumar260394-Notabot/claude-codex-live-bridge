@@ -5,6 +5,11 @@
 | Extension appears as a chat attachment | Install through Settings → Extensions, not the conversation's file attachment button. |
 | Codex updated and wake fails | Inspect executable discovery in bridge status. Remove an obsolete `CODEX_BRIDGE_CLI` override or set a valid executable. Normal discovery avoids version-pinned folders. |
 | Message is queued but unseen | Check the exact target endpoint, host state and actual acknowledgement. Queue acceptance is not proof of model visibility. |
+| Codex executable exists but queue is unavailable | The bridge probes `queue --help` without sending. Install a Codex desktop client that advertises `--thread` and `--message`; some standalone CLI versions lack this command. |
+| Named chat lookup is empty | Read `codex_sessions.discovery`. Use Node.js 22.13.0+; lookup checks the newest compatible `state_<number>.sqlite` schema. Index-only titles do not verify a routing destination. |
+| A deleted chat appears in old hook files | A readable current Codex database takes precedence; archived/deleted chats are excluded even when old index titles or hook logs remain. |
+| Setup refuses a tracked config | Keep machine settings out of Git. Existing tracked files are preserved. Claude Code supports local MCP scope in user configuration; do not commit personal launch paths. |
+| Desktop companion says its MCP server is missing in Claude Code | Use the Claude Code channel rather than Desktop-only companion hooks. The two transports intentionally use different server keys. |
 | Claude Code stopped receiving after a plugin update | Run `connect_project` again in each connected project; it refreshes managed hook and channel paths without overwriting other settings. Reload the affected Claude Code session. Inspect `setup.claude_paths` for missing files or events. |
 | Claude Code authentication expired | Sign into Claude Code using its normal login. This affects Claude Code and Remote Control, not the standalone Claude Desktop connector. |
 | Asked to install or log into Claude CLI for Desktop | Desktop-only use does not require it. Check the installed Desktop extension and selected conversation's tools instead. |

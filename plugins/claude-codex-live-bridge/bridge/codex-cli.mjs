@@ -1,6 +1,26 @@
 import { readdirSync, statSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { delimiter, dirname, join } from 'node:path';
+import { spawnSync } from 'node:child_process';
+
+const queueCapabilities = new Map();
+export function checkCodexQueue(cli) {
+  if (!cli.ok) return { ...cli, queue_supported: false };
+  let modified;
+  try { modified = statSync(cli.path).mtimeMs; }
+  catch { return { ...cli, ok: false, queue_supported: false, reason: 'Codex executable disappeared during an app update; retry discovery.' }; }
+  const cached = queueCapabilities.get(cli.path);
+  if (cached?.modified === modified) return { ...cli, ...cached.result };
+  const script = /\.(?:c|m)?js$/i.test(cli.path);
+  const run = spawnSync(script ? process.execPath : cli.path,
+    [...(script ? [cli.path] : []), 'queue', '--help'],
+    { encoding: 'utf8', timeout: 5000, windowsHide: true, shell: false });
+  const supported = run.status === 0 && /--thread\b/.test(run.stdout || '') && /--message\b/.test(run.stdout || '');
+  const result = { ok: supported, queue_supported: supported,
+    ...(!supported ? { reason: 'The discovered Codex executable did not advertise queue --thread/--message support. Update the Codex desktop client; messages remain in the local inbox.' } : {}) };
+  queueCapabilities.set(cli.path, { modified, result });
+  return { ...cli, ...result };
+}
 
 function file(path) {
   try { return statSync(path).isFile(); } catch { return false; }

@@ -7,7 +7,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / 'plugins/claude-codex-live-bridge'
 VERSION = json.loads((PLUGIN / 'plugin.json').read_text(encoding='utf-8'))['version']
-SHARED = ('common.mjs', 'protocol.mjs', 'desktop-activity.mjs', 'codex-cli.mjs')
+SHARED = ('common.mjs', 'protocol.mjs', 'desktop-activity.mjs', 'codex-cli.mjs', 'codex-sessions.mjs')
 
 
 def sources(folder):

@@ -15,12 +15,13 @@
     ]
   },
   "name": "claude-codex-live-bridge",
-  "version": "0.3.0-beta.3",
+  "version": "0.3.0-beta.4",
   "description": "Collaborate with Claude Code or Claude Desktop through local Codex chats, with raised hands and linked two-way calls.",
   "author": {
     "name": "skumar260394-Notabot"
   },
   "keywords": [],
   "skills": "./skills",
-  "mcpServers": "./.mcp.json"
+  "mcpServers": "./.mcp.json",
+  "hooks": "./hooks/hooks.json"
 }

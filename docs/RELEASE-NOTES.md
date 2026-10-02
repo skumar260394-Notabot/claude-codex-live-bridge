@@ -1,12 +1,12 @@
-# Claude Codex Live Bridge 0.3.0-beta.3
+# Claude Codex Live Bridge 0.3.0-beta.4
 
 Windows bug-fix preview of the local Claude ↔ Codex collaboration bridge, MIT licensed.
 
 ## Downloads
 
-- `claude-codex-live-bridge-desktop-0.3.0-beta.3.mcpb`: install in Claude Desktop's Extensions settings.
-- `claude-codex-live-bridge-codex-0.3.0-beta.3.zip`: Codex plugin source package; repository marketplace installation is recommended.
-- `claude-codex-live-bridge-alerts-0.3.0-beta.3.zip`: optional experimental Claude reply-only companion.
+- `claude-codex-live-bridge-desktop-0.3.0-beta.4.mcpb`: install in Claude Desktop's Extensions settings.
+- `claude-codex-live-bridge-codex-0.3.0-beta.4.zip`: Codex plugin source package; repository marketplace installation is recommended.
+- `claude-codex-live-bridge-alerts-0.3.0-beta.4.zip`: optional experimental Claude reply-only companion.
 - `SHA256SUMS.txt`: checksums for all three packages.
 
 Read [installation](https://github.com/skumar260394-Notabot/claude-codex-live-bridge/blob/main/docs/INSTALL.md), [supported features](https://github.com/skumar260394-Notabot/claude-codex-live-bridge/blob/main/docs/SUPPORT.md), and [privacy](https://github.com/skumar260394-Notabot/claude-codex-live-bridge/blob/main/PRIVACY.md).
@@ -15,11 +15,14 @@ Existing private bridge users: public plugin identities are new. Disable/disconn
 
 ## Fixed in this release
 
-Claude Code project reconnection now refreshes stale managed hook and channel
-paths left by a plugin update. It preserves unrelated settings and custom
-options. Status reports missing scripts and incomplete hook events instead of
-treating saved entries as usable. Server-name collisions remain untouched and
-setup reports the failure.
+Named Codex lookup now discovers compatible numbered SQLite databases and
+optional title/name columns, exposes failures, and excludes stale deleted
+chats. Node.js 22.13.0+ is required. The alert probe works in Windows shells.
+Both Codex manifests explicitly register hooks. Queue support is probed before
+advertising availability. Generated machine settings use local Git exclusions;
+tracked files are preserved with an actionable refusal. Desktop companion and
+Claude Code channel server names are documented separately. The stale cache
+path repair from beta.3 remains covered by its regression suite.
 
 After updating the Codex plugin, run `connect_project` for each existing Claude
 Code project, then reload the affected Claude Code session as needed. Desktop
@@ -28,7 +31,11 @@ cloud-session connector change in this release.
 
 ## Verification
 
-The legacy suite, 20 reciprocal checks, six setup-upgrade checks and 46 reply-only checks passed in isolated environments. All packages passed integrity/checksum checks and both MCP servers started successfully from freshly extracted archives. This verifies the local protocol and package layout, not a live UI installation.
+The legacy suite, 20 reciprocal checks, six setup-upgrade checks, 46 reply-only
+checks and 16 local-review regressions passed in isolated environments. All
+packages passed integrity/checksum checks and both MCP servers started from
+freshly extracted archives. This verifies local behavior and package layout;
+native Claude alert delivery remains unverified.
 
 ## Known limitations
 
