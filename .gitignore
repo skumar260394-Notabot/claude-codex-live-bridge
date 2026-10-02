@@ -1,0 +1,13 @@
+dist/
+node_modules/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+.codex-claude-live/
+auth.json
+*.log
+*.tmp
+.DS_Store
+Thumbs.db

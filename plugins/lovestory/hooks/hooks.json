@@ -1,0 +1,104 @@
+{
+  "description": "lovestory: record Codex activity and inject peer messages as context through the existing MCP connection. Never blocks or denies a tool call.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "mcp_tool",
+            "server": "claude-live-bridge",
+            "tool": "codex_hook_event",
+            "input": {
+              "hook_event_name": "SessionStart",
+              "session_id": "${session_id}",
+              "cwd": "${cwd}"
+            },
+            "timeout": 15,
+            "statusMessage": "lovestory"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "mcp_tool",
+            "server": "claude-live-bridge",
+            "tool": "codex_hook_event",
+            "input": {
+              "hook_event_name": "UserPromptSubmit",
+              "session_id": "${session_id}",
+              "cwd": "${cwd}"
+            },
+            "timeout": 15,
+            "statusMessage": "lovestory"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "mcp_tool",
+            "server": "claude-live-bridge",
+            "tool": "codex_hook_event",
+            "input": {
+              "hook_event_name": "PreToolUse",
+              "session_id": "${session_id}",
+              "cwd": "${cwd}",
+              "turn_id": "${turn_id}",
+              "tool_name": "${tool_name}",
+              "tool_input": "${tool_input}",
+              "tool_use_id": "${tool_use_id}"
+            },
+            "timeout": 15,
+            "statusMessage": "lovestory"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "mcp_tool",
+            "server": "claude-live-bridge",
+            "tool": "codex_hook_event",
+            "input": {
+              "hook_event_name": "PostToolUse",
+              "session_id": "${session_id}",
+              "cwd": "${cwd}",
+              "turn_id": "${turn_id}",
+              "tool_name": "${tool_name}",
+              "tool_input": "${tool_input}",
+              "tool_use_id": "${tool_use_id}"
+            },
+            "timeout": 15,
+            "statusMessage": "lovestory"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "mcp_tool",
+            "server": "claude-live-bridge",
+            "tool": "codex_hook_event",
+            "input": {
+              "hook_event_name": "Stop",
+              "session_id": "${session_id}",
+              "cwd": "${cwd}",
+              "last_assistant_message": "${last_assistant_message}"
+            },
+            "timeout": 15,
+            "statusMessage": "lovestory"
+          }
+        ]
+      }
+    ]
+  }
+}

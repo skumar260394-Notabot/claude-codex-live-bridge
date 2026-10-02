@@ -1,0 +1,26 @@
+{
+  "interface": {
+    "displayName": "lovestory",
+    "shortDescription": "Claude and Codex collaboration",
+    "longDescription": "Local messages, named existing sessions, Claude Code raised hands and optional activity feeds. Desktop reply-only hook alerts are experimental and require a live transport probe.",
+    "developerName": "skumar260394-Notabot",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "Connect to Claude Code in this project and show what Claude is doing.",
+      "Raise a hand with Claude about a concern in our shared work.",
+      "Check whether Claude and I are changing the same Git files."
+    ]
+  },
+  "name": "lovestory",
+  "version": "0.3.0-beta.1",
+  "description": "Collaborate with Claude Code or Claude Desktop through local Codex chats, with raised hands and linked two-way calls.",
+  "author": {
+    "name": "skumar260394-Notabot"
+  },
+  "keywords": [],
+  "skills": "./skills",
+  "mcpServers": "./.mcp.json"
+}

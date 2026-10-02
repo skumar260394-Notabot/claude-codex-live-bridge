@@ -1,0 +1,30 @@
+{
+  "manifest_version": "0.3",
+  "name": "lovestory-desktop",
+  "display_name": "lovestory",
+  "version": "0.3.0-beta.1",
+  "description": "Connect Claude to existing Codex chats with optional reply-only hook alerts; activity reports require explicit user requests.",
+  "author": {
+    "name": "skumar260394-Notabot"
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "server/desktop-server.mjs",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/server/desktop-server.mjs"
+      ],
+      "env": {}
+    }
+  },
+  "tools_generated": true,
+  "compatibility": {
+    "platforms": [
+      "win32"
+    ],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  }
+}

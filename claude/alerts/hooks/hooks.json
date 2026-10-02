@@ -1,0 +1,8 @@
+{
+  "description": "Check only subscribed replies through a supported MCP hook transport. No activity reports, polling reminders, timers, Stop hooks, or permission decisions. Empty inbox returns no context.",
+  "hooks": {
+    "UserPromptSubmit": [{ "hooks": [{ "type": "mcp_tool", "server": "lovestory", "tool": "reply_hook", "timeout": 3, "input": { "hook_event_name": "UserPromptSubmit", "session_id": "${session_id}" } }] }],
+    "PostToolUse": [{ "hooks": [{ "type": "mcp_tool", "server": "lovestory", "tool": "reply_hook", "timeout": 3, "input": { "hook_event_name": "PostToolUse", "session_id": "${session_id}", "tool_name": "${tool_name}", "tool_input": "${tool_input}" } }] }],
+    "PostToolUseFailure": [{ "hooks": [{ "type": "mcp_tool", "server": "lovestory", "tool": "reply_hook", "timeout": 3, "input": { "hook_event_name": "PostToolUseFailure", "session_id": "${session_id}", "tool_name": "${tool_name}", "tool_input": "${tool_input}" } }] }]
+  }
+}
