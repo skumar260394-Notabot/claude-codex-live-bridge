@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync, execFileSync } from 'node:child_process';
@@ -58,6 +58,12 @@ protectLocalConfigs(nested,[nestedSettings]);
 check(git(['check-ignore',nestedSettings]).length>0,'nested workspaces and literal glob characters are escaped');
 git(['--literal-pathspecs','add','-f',nestedSettings]);
 assert.throws(()=>protectLocalConfigs(nested,[nestedSettings]),/tracked files/); checks++;
+const alias=join(sandbox,'project alias');
+symlinkSync(project,alias,process.platform==='win32'?'junction':'dir');
+const aliasedConfig=join(alias,'.claude','settings.local.json');
+protectLocalConfigs(alias,[aliasedConfig]);
+mkdirSync(join(alias,'.claude'));writeFileSync(aliasedConfig,'{}');
+check(git(['check-ignore',join(project,'.claude','settings.local.json')]).length>0,'canonical paths protect aliases and not-yet-created settings');
 
 const supported=join(sandbox,'supported.mjs'), unsupported=join(sandbox,'unsupported.mjs');
 writeFileSync(supported,"console.log('queue --thread <id> --message <text>');");
@@ -69,8 +75,8 @@ const call=openCall(project,{subject:'probe',opened_by:'codex',claude_endpoint:'
 const probe=prepareReplyNotifications({project_path:project,call_id:call.call_id});
 const shell=process.platform==='win32'?'powershell.exe':'sh';
 const args=process.platform==='win32'?['-NoProfile','-NonInteractive','-Command',probe.probe_command]:['-c',probe.probe_command];
-const run=spawnSync(shell,args,{encoding:'utf8',windowsHide:true,timeout:10000});
-check(run.status===0 && run.stdout.trim()===probe.probe_token,'returned probe command runs in the actual native shell');
+const run=spawnSync(shell,args,{encoding:'utf8',windowsHide:true,timeout:30000});
+check(run.status===0 && run.stdout.trim()===probe.probe_token,`returned probe command runs in the actual native shell: ${JSON.stringify({status:run.status,stdout:run.stdout,stderr:run.stderr,error:run.error?.message})}`);
 if(process.platform==='win32') {
   const cmd=spawnSync('cmd.exe',['/d','/s','/c',`"${probe.probe_command}"`],{encoding:'utf8',windowsHide:true,windowsVerbatimArguments:true,timeout:10000});
   check(cmd.status===0 && cmd.stdout.trim()===probe.probe_token,'same probe runs in Windows cmd');

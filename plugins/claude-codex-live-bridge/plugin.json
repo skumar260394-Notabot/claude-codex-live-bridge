@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "claude-codex-live-bridge",
-  "version": "0.3.0-beta.4",
+  "version": "0.3.0-beta.5",
   "description": "Collaborate with Claude Code or Claude Desktop through local Codex chats, with raised hands and linked two-way calls.",
   "author": {
     "name": "skumar260394-Notabot"

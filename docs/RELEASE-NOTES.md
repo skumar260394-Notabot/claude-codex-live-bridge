@@ -1,12 +1,12 @@
-# Claude Codex Live Bridge 0.3.0-beta.4
+# Claude Codex Live Bridge 0.3.0-beta.5
 
 Windows bug-fix preview of the local Claude ↔ Codex collaboration bridge, MIT licensed.
 
 ## Downloads
 
-- `claude-codex-live-bridge-desktop-0.3.0-beta.4.mcpb`: install in Claude Desktop's Extensions settings.
-- `claude-codex-live-bridge-codex-0.3.0-beta.4.zip`: Codex plugin source package; repository marketplace installation is recommended.
-- `claude-codex-live-bridge-alerts-0.3.0-beta.4.zip`: optional experimental Claude reply-only companion.
+- `claude-codex-live-bridge-desktop-0.3.0-beta.5.mcpb`: install in Claude Desktop's Extensions settings.
+- `claude-codex-live-bridge-codex-0.3.0-beta.5.zip`: Codex plugin source package; repository marketplace installation is recommended.
+- `claude-codex-live-bridge-alerts-0.3.0-beta.5.zip`: optional experimental Claude reply-only companion.
 - `SHA256SUMS.txt`: checksums for all three packages.
 
 Read [installation](https://github.com/skumar260394-Notabot/claude-codex-live-bridge/blob/main/docs/INSTALL.md), [supported features](https://github.com/skumar260394-Notabot/claude-codex-live-bridge/blob/main/docs/SUPPORT.md), and [privacy](https://github.com/skumar260394-Notabot/claude-codex-live-bridge/blob/main/PRIVACY.md).
@@ -32,7 +32,7 @@ cloud-session connector change in this release.
 ## Verification
 
 The legacy suite, 20 reciprocal checks, six setup-upgrade checks, 46 reply-only
-checks and 16 local-review regressions passed in isolated environments. All
+checks and 17 local-review regressions passed in isolated environments. All
 packages passed integrity/checksum checks and both MCP servers started from
 freshly extracted archives. This verifies local behavior and package layout;
 native Claude alert delivery remains unverified.

@@ -1,4 +1,4 @@
-# Release verification — 0.3.0-beta.4
+# Release verification — 0.3.0-beta.5
 
 ## Checked locally on Windows
 
@@ -8,7 +8,7 @@
   settings preservation, repeat setup, incomplete events and server collisions.
 - Reciprocal MCP/channel/protocol suite: 20 checks passed with a recording CLI stub.
 - Reply-only notifications: 46 checks passed with isolated homes and synthetic sessions.
-- Local review regressions: 16 checks for numbered database/schema discovery,
+- Local review regressions: 17 checks for numbered database/schema discovery,
   stale chat exclusion, local Git protection, queue capabilities and real
   PowerShell/cmd probe execution. No live Claude model was contacted.
 - Three built archives passed integrity and SHA-256 verification.

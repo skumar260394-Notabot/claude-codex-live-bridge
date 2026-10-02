@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0-beta.5 — 2026-10-02
+
+- Canonicalize Windows short names and directory aliases before protecting
+  local Git configuration, including files that do not exist yet.
+- Add an alias-path regression; all seven local review resolutions from
+  beta.4 remain included. Native Desktop/cloud tests are still deferred.
+
 ## 0.3.0-beta.4 — 2026-10-02
 
 - Read the newest compatible Codex state database instead of hard-coding

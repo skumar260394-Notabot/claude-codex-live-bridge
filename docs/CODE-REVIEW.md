@@ -1,4 +1,4 @@
-# Local review resolution — 0.3.0-beta.4
+# Local review resolution — 0.3.0-beta.5
 
 The seven questions from the owner's Claude review were checked against source,
 installed-client help and the vendors' current documentation.

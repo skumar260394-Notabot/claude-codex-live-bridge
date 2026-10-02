@@ -620,7 +620,7 @@ for await (const line of lines) {
   if (request.id === undefined) continue;
   try {
     let result;
-    if (request.method === 'initialize') result = { protocolVersion: request.params?.protocolVersion ?? '2025-06-18', capabilities: { tools: {} }, serverInfo: { name: 'claude-live-bridge', version: '0.3.0-beta.4' } };
+    if (request.method === 'initialize') result = { protocolVersion: request.params?.protocolVersion ?? '2025-06-18', capabilities: { tools: {} }, serverInfo: { name: 'claude-live-bridge', version: '0.3.0-beta.5' } };
     else if (request.method === 'ping') result = {};
     else if (request.method === 'tools/list') result = { tools };
     else if (request.method === 'tools/call') {

@@ -1,6 +1,19 @@
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
+import { mkdirSync, readFileSync, writeFileSync, realpathSync } from 'node:fs';
+import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
+
+function canonicalPath(path) {
+  let current = resolve(path);
+  const missing = [];
+  for (;;) {
+    try { return join(realpathSync.native(current), ...missing.reverse()); }
+    catch (error) {
+      if (error.code !== 'ENOENT' || dirname(current) === current) throw error;
+      missing.push(basename(current));
+      current = dirname(current);
+    }
+  }
+}
 
 // Keep per-machine launch paths out of shared Git history without changing
 // the project's shared ignore rules or untracking anyone's existing files.
@@ -10,7 +23,7 @@ export function protectLocalConfigs(root, paths) {
     encoding: 'utf8', windowsHide: true, timeout: 10000, stdio: ['ignore', 'pipe', 'pipe']
   }).trim();
   let top;
-  try { top = git(['rev-parse', '--show-toplevel']); }
+  try { top = canonicalPath(git(['rev-parse', '--show-toplevel'])); }
   catch (error) {
     if (error.code === 'ENOENT') throw new Error('Git is required to protect generated machine-local configuration. Install Git before connecting a project.');
     if (!String(error.stderr).includes('not a git repository')) throw error;
@@ -18,7 +31,7 @@ export function protectLocalConfigs(root, paths) {
   }
   gitDirectory = top;
   const entries = paths.map(path => {
-    const name = relative(top, path).split(sep).join('/');
+    const name = relative(top, canonicalPath(path)).split(sep).join('/');
     if (!name || name.startsWith('../') || isAbsolute(name)) throw new Error('Configuration path is outside the selected Git repository.');
     return name;
   });
